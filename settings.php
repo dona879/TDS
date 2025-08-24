@@ -83,6 +83,15 @@ $block_without_referer = $conf['tds.filters.blocked.referer.empty'];
 $referer_stopwords = $conf['tds.filters.blocked.referer.stopwords'];
 $block_vpnandtor = $conf['tds.filters.blocked.vpntor'];
 
+// Enhanced features configuration
+$enhanced_enabled = $conf->get('tds.enhanced.enabled', false);
+$enhanced_device_detection = $conf->get('tds.enhanced.device_detection.enabled', false);
+$enhanced_fingerprinting = $conf->get('tds.enhanced.fingerprinting.enabled', false);
+$fpjs_api_key = $conf->get('tds.enhanced.fingerprinting.fpjs_api_key', '');
+$fpjs_public_key = $conf->get('tds.enhanced.fingerprinting.fpjs_public_key', '');
+$max_visits_72h = $conf->get('tds.enhanced.fingerprinting.max_visits_72h', 5);
+$rules_engine_enabled = $conf->get('tds.enhanced.rules_engine.enabled', false);
+
 $back_button_action = $conf['scripts.back.action'];
 $replace_back_address = $conf['scripts.back.value'];
 $disable_text_copy = $conf['scripts.disabletextcopy'];
