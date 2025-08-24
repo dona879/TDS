@@ -357,3 +357,10 @@ healthchecksdb
 /clicks.db
 /clicks.db-shm
 /clicks.db-wal
+
+# SleekDB cache and counter files
+logs/*/cache/
+logs/*/_cnt.sdb
+
+# Test files
+test_*.php

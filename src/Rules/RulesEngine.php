@@ -67,6 +67,21 @@ class RulesEngine
         $conditions = $rule['conditions'];
         $operator = $rule['operator'] ?? 'AND'; // AND or OR
         
+        // Validate conditions structure
+        if (!is_array($conditions)) {
+            error_log("Skipping rule {$rule['_id']}: conditions is not an array");
+            return false;
+        }
+        
+        // Check if conditions is properly structured (array of condition objects)
+        if (!empty($conditions)) {
+            $firstCondition = reset($conditions);
+            if (!is_array($firstCondition) || !isset($firstCondition['field'])) {
+                error_log("Skipping rule {$rule['_id']}: conditions has invalid structure");
+                return false;
+            }
+        }
+        
         $results = [];
         
         foreach ($conditions as $condition) {
@@ -92,6 +107,9 @@ class RulesEngine
         
         // Get actual value from data
         $actualValue = $this->getFieldValue($field, $visitorData, $deviceData, $fingerprintData);
+        
+        // Optional debug logging (uncomment for debugging)
+        // error_log("Evaluating condition: field=$field, operator=$operator, expected=$value, actual=$actualValue");
         
         // Evaluate based on operator
         switch ($operator) {
@@ -129,9 +147,26 @@ class RulesEngine
      */
     private function getFieldValue($field, $visitorData, $deviceData, $fingerprintData)
     {
-        // Device data fields
+        // Direct field lookup in device data (for fields like device_brand, os_name, etc.)
+        if (isset($deviceData[$field])) {
+            return $deviceData[$field];
+        }
+        
+        // Device data fields with dot notation (device.brand -> device_brand)
         if (strpos($field, 'device.') === 0) {
-            $key = substr($field, 7);
+            $key = 'device_' . substr($field, 7);
+            return $deviceData[$key] ?? '';
+        }
+        
+        // OS data fields with dot notation (os.name -> os_name)
+        if (strpos($field, 'os.') === 0) {
+            $key = 'os_' . substr($field, 3);
+            return $deviceData[$key] ?? '';
+        }
+        
+        // Browser data fields with dot notation (browser.name -> browser_name)
+        if (strpos($field, 'browser.') === 0) {
+            $key = 'browser_' . substr($field, 8);
             return $deviceData[$key] ?? '';
         }
         
@@ -216,7 +251,7 @@ class RulesEngine
     {
         try {
             // First check if the store has any data
-            $dataPath = $this->dataDir . '/filter_rules';
+            $dataPath = $this->dataDir . '/filter_rules/data';
             if (!is_dir($dataPath)) {
                 return [];
             }

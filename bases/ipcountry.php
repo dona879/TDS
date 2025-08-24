@@ -44,6 +44,12 @@ function getip(){
 function getcountry($ip=null){
 	if (is_null($ip))
 		$ip=getip();
+	
+	// Handle invalid or unknown IPs
+	if ($ip === 'Unknown' || empty($ip) || !filter_var($ip, FILTER_VALIDATE_IP)) {
+		return 'Unknown';
+	}
+	
 	$reader = new Reader(__DIR__.'/GeoLite2-Country.mmdb');
 	if ($ip==='::1'||$ip==='127.0.0.1') $ip='31.177.76.70'; //for debugging
 	try{
@@ -57,6 +63,11 @@ function getcountry($ip=null){
 }
 
 function getcity($ip,$locale){
+	// Handle invalid or unknown IPs
+	if ($ip === 'Unknown' || empty($ip) || !filter_var($ip, FILTER_VALIDATE_IP)) {
+		return 'Unknown';
+	}
+	
 	$reader = new Reader(__DIR__.'/GeoLite2-City.mmdb');
 	if ($ip==='::1'||$ip==='127.0.0.1') $ip='31.177.76.70'; //for debugging
 	try{
@@ -73,6 +84,11 @@ function getcity($ip,$locale){
 }
 
 function getisp($ip){
+	// Handle invalid or unknown IPs
+	if ($ip === 'Unknown' || empty($ip) || !filter_var($ip, FILTER_VALIDATE_IP)) {
+		return 'Unknown';
+	}
+	
 	$reader = new Reader(__DIR__.'/GeoLite2-ASN.mmdb');
 	if ($ip==='::1'||$ip==='127.0.0.1') $ip='31.177.76.70'; //for debugging
 	try{

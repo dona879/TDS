@@ -9,7 +9,7 @@ if (version_compare(phpversion(), '7.2.0', '<')) {
     die("PHP version should be 7.2 or higher! Change your PHP version and return.");
 }
 
-require_once '../settings.php';
+require_once __DIR__ . '/../settings.php';
 require_once 'password.php';
 check_password();
 

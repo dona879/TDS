@@ -27,6 +27,17 @@ if(false === class_exists("\Composer\Autoload\ClassLoader")) {
     }
 }
 
+// Always ensure critical classes are loaded
+if (!class_exists('SleekDB\Classes\IoHelper')) {
+    require_once __DIR__ . '/Classes/IoHelper.php';
+}
+if (!class_exists('SleekDB\Classes\NestedHelper')) {
+    require_once __DIR__ . '/Classes/NestedHelper.php';
+}
+if (!class_exists('SleekDB\Query')) {
+    require_once __DIR__ . '/Query.php';
+}
+
 class Store
 {
 
